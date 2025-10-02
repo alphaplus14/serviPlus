@@ -666,9 +666,11 @@ function editarPersona(id) {
                             <select class="form-control" id="cargo" required></select>
                         </div>
 
-                        <div class="mb-3" id="areaContainer">
+                        <div class="mb-3">
                             <label class="form-label">Área o departamento</label><br>
+                            <div id="areaContainer"></div>
                         </div>
+
 
                         <div class="mb-3">
                             <label class="form-label">Fecha de ingreso</label>
@@ -695,39 +697,63 @@ function editarPersona(id) {
                 confirmButtonText: 'Guardar',
                 cancelButtonText: 'Cancelar',
                 focusConfirm: false,
+                // para llenar cargos y departamentos cuando se abre el modal
                 didOpen: () => {
-                    // Llenar select de cargos
+                    // Llenar select de los  cargos
                     $.ajax({
-                        url: 'controller/listarCargos.php', // tu endpoint que devuelve todos los cargos
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(cargos) {
-                            let html = '';
-                            cargos.forEach(cargo => {
-                                html += `<option value="${cargo.id}" ${cargo.id == empleado.cargo_id ? 'selected' : ''}>${cargo.nombre}</option>`;
-                            });
-                            $('#cargo').html(html);
-                        }
-                    });
+                      url: 'controller/listarCargos.php',
+                      type: 'GET',
+                      dataType: 'json',
+                      success: function(cargos) {
+                          let select = $('#cargo'); // select es un objeto jQuery
 
-                    // Llenar áreas
+                          cargos.forEach(cargo => {
+                              let option = $('<option>')
+                                  .val(cargo.id)            // value del option
+                                  .text(cargo.nombre);      // nombre de cargo
+
+                              if (cargo.id == empleado.cargo_id) {
+                                  option.prop('selected', true); // marcar como seleccionado
+                              }
+
+                              select.append(option); // agregar al select 
+                          });
+                      }
+                  });
+
+
+                    // Llenar con un controlador
                     $.ajax({
-                        url: 'controller/listarDepartamentos.php', // tu endpoint de áreas
-                        type: 'GET',
-                        dataType: 'json',
-                        success: function(departamentos) {
-                            let html = '';
-                            departamentos.forEach(dep => {
-                                html += `
-                                    <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="area" value="${dep.id}" ${dep.id == empleado.departamento_id ? 'checked' : ''} required>
-                                        <label class="form-check-label">${dep.nombre}</label>
-                                    </div>
-                                `;
-                            });
-                            $('#areaContainer').html(html);
-                        }
-                    });
+                      url: 'controller/listarDepartamentos.php',
+                      type: 'GET',
+                      dataType: 'json',
+                      success: function(departamentos) {
+                          let contenedor = $('#areaContainer');
+
+                          departamentos.forEach(dep => {
+                              let div = $('<div>').addClass('form-check form-check-inline');
+
+                              let input = $('<input>')
+                                  .addClass('form-check-input')
+                                  .attr('type', 'radio')
+                                  .attr('name', 'area')
+                                  .attr('value', dep.id)
+                                  .prop('required', true);
+
+                              if (dep.id == empleado.departamento_id) {
+                                  input.prop('checked', true);
+                              }
+
+                              let label = $('<label>')
+                                  .addClass('form-check-label')
+                                  .text(dep.nombre);
+
+                              div.append(input).append(label);
+                              contenedor.append(div);
+                          });
+                      }
+                  });
+
                 },
                 preConfirm: () => {
                     const formData = new FormData();

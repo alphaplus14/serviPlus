@@ -9,11 +9,10 @@ session_start();
 if (isset($_POST['cedula']) && !empty($_POST['cedula']) && 
     isset($_POST['password']) && !empty($_POST['password'])) {
 
-    // Conexión a la BD
     $mysql = new MySQL();
     $mysql->conectar();
 
-    // Sanitización
+    // Sanitizacion de datos
     $identificacion = htmlspecialchars(trim($_POST['cedula']), ENT_QUOTES, 'UTF-8');
     $password = $_POST['password'];
 
@@ -52,7 +51,7 @@ if (isset($_POST['cedula']) && !empty($_POST['cedula']) &&
     }
 $mysql->desconectar();
 } else {
-    // Si no envió datos
+
     header("Location: ../views/login.php");
     exit();
 }

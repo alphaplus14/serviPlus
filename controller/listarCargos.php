@@ -1,8 +1,7 @@
 <?php
-// listarCargos.php
 header('Content-Type: application/json; charset=utf-8');
 
-require_once '../modelo/MySQL.php'; // Ajusta la ruta según tu proyecto
+require_once '../modelo/MySQL.php'; 
 
 $mysql = new MySQL();
 $mysql->conectar();
@@ -18,7 +17,6 @@ if ($resultado) {
     }
 }
 
-// Cerrar conexión
 $mysql->desconectar();
 
 // Devolver JSON
