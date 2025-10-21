@@ -56,7 +56,6 @@ if (isset($_POST['cedula']) && !empty($_POST['cedula']) &&
             $_SESSION['fotoPerfil'] = $usuarios['foto'];
             $_SESSION['fecha'] = $usuarios['fecha'];
 
-            // SweetAlert de bienvenida
             echo "
             <!DOCTYPE html>
             <html lang='es'>
