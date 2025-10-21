@@ -784,9 +784,10 @@ function editarPersona(id) {
                         success: function(res) {
                             if (res.success) {
                                 Swal.fire('✅ Éxito', res.message, 'success').then(() => location.reload());
-                            } else {
-                                Swal.fire('⚠️ Atención', res.message, 'warning');
-                            }
+                            }  else {
+                            // Caso de documento/correo repetido u otro error controlado
+                            Swal.fire('⚠️ Atención', res.message, 'warning');
+                        }
                         },
                         error: function(xhr, status, error) {
                             Swal.fire('❌ Error', 'Error en el servidor', 'error');

@@ -52,6 +52,20 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
         $fotoActual = $ruta;
     }
 }
+// Verificar duplicado de correo (excepto el mismo usuario)
+$consultaDuplicado = "
+    SELECT id FROM empleados 
+    WHERE correo = '$correo' AND id != '$id'
+";
+$resultDup = $mysql->efectuarConsulta($consultaDuplicado);
+if ($resultDup && mysqli_num_rows($resultDup) > 0) {
+     http_response_code(200);
+    echo json_encode([
+        'success' => false, 
+        'message' => 'El documento o correo ya está registrado.'
+    ]);
+    exit();
+}
 
 if (!empty($passwordNueva)) {
 
@@ -60,6 +74,7 @@ if (!empty($passwordNueva)) {
         echo json_encode(["success" => false, "message" => "La contraseña actual no coincide"]);
         exit();
     }
+
 //si coincide actuliza por la nueva
     $passwordNuevaHash = password_hash($passwordNueva, PASSWORD_BCRYPT);
     $consulta = "UPDATE empleados 
