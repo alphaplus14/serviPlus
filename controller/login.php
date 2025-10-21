@@ -68,7 +68,6 @@ if (isset($_POST['cedula']) && !empty($_POST['cedula']) &&
                 Swal.fire({
                     icon: 'success',
                     title: 'Bienvenido',
-                    text: 'Hola, ".$usuarios['nombre']."',
                     timer: 2000,
                     showConfirmButton: false
                 }).then(() => {
