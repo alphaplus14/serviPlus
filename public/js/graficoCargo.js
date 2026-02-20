@@ -1,7 +1,7 @@
 fetch("../controller/datos_graficoCargo.php")
   .then((response) => response.json())
   .then((data) => {
-    const labels = data.map((item) => item.nombre);
+    const labels = data.map((item) => item.nombreCargo);
     const valores = data.map((item) => item.cantidad);
 
     const ctx = document.getElementById("grafico2").getContext("2d");

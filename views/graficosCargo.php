@@ -15,10 +15,10 @@ $fecha=$_SESSION['fecha'];
 $mysql = new MySQL();
 $mysql->conectar();
 //consulta para obtener las personas
-$resultado=$mysql->efectuarConsulta("SELECT empleados.id,empleados.foto, empleados.nombre, empleados.identificacion, cargo.nombre AS cargo, departamento.nombre AS area, empleados.fecha, empleados.salario, empleados.estado, empleados.correo, empleados.telefono FROM empleados inner join cargo on empleados.cargo_id = cargo.id  inner join departamento on empleados.departamento_id = departamento.id");
+$resultado=$mysql->efectuarConsulta("SELECT empleados.IDempleado,empleados.imagen, empleados.nombre, empleados.numDocumento, cargos.nombreCargo AS cargo, departamentos.nombreDepartamento AS area, empleados.fechaIngreso, empleados.salarioBase, empleados.estado, empleados.correoElectronico, empleados.telefono FROM empleados inner join cargos on empleados.cargo_id = cargos.IDcargo  inner join departamentos on empleados.departamento_id = departamentos.IDdepartamento");
 
-$consultaCargo = $mysql->efectuarConsulta("SELECT nombre FROM cargo WHERE id='$rol'");
-$cargoUsuario = $consultaCargo->fetch_assoc()['nombre'] ?? 'Sin cargo';
+$consultaCargo = $mysql->efectuarConsulta("SELECT nombreCargo FROM cargos WHERE IDcargo='$rol'");
+$cargoUsuario = $consultaCargo->fetch_assoc()['nombreCargo'] ?? 'Sin cargo';
 
 
 

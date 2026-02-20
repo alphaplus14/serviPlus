@@ -8,7 +8,7 @@ $mysql = new MySQL();
 $mysql->conectar();
 
 // Consulta para obtener todos los departamentos
-$query = "SELECT id, nombre FROM departamento ORDER BY nombre ASC";
+$query = "SELECT IDdepartamento, nombreDepartamento FROM departamentos ORDER BY nombreDepartamento ASC";
 $resultado = $mysql->efectuarConsulta($query);
 
 $departamentos = [];

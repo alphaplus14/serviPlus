@@ -16,7 +16,7 @@ if (isset($_POST['cedula']) && !empty($_POST['cedula']) &&
     $password = $_POST['password'];
 
     // Consulta del usuario
-    $resultado = $mysql->efectuarConsulta("SELECT * FROM empleados WHERE identificacion='".$identificacion."'");
+    $resultado = $mysql->efectuarConsulta("SELECT * FROM empleados WHERE numDocumento='".$identificacion."'");
     $usuarios = mysqli_fetch_assoc($resultado);
     $mysql->desconectar(); 
 
@@ -49,12 +49,12 @@ if (isset($_POST['cedula']) && !empty($_POST['cedula']) &&
         // Verificar contraseña
         if (password_verify($password, $usuarios['password'])) {
             // Guardar sesión
-            $_SESSION['usuario_id'] = $usuarios['id'];
-            $_SESSION['identificacion'] = $usuarios['identificacion'];
+            $_SESSION['usuario_id'] = $usuarios['IDempleado'];
+            $_SESSION['identificacion'] = $usuarios['numDocumento'];
             $_SESSION['cargo'] = $usuarios['cargo_id'];
             $_SESSION['nombre_usuario'] = $usuarios['nombre'];
-            $_SESSION['fotoPerfil'] = $usuarios['foto'];
-            $_SESSION['fecha'] = $usuarios['fecha'];
+            $_SESSION['fotoPerfil'] = $usuarios['imagen'];
+            $_SESSION['fecha'] = $usuarios['fechaIngreso'];
 
             echo "
             <!DOCTYPE html>

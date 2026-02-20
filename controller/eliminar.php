@@ -12,7 +12,7 @@ $mysql->conectar();
     $estado='Inactivo';
         $mysql->efectuarConsulta("UPDATE empleados 
             SET 
-                estado='$estado'             WHERE id='$id'");
+                estado='$estado'             WHERE IDdocumento='$id'");
         $mysql->desconectar();
 
         header('location:../index.php');

@@ -1,4 +1,4 @@
-<?php 
+<?php
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
@@ -6,19 +6,19 @@ header("Pragma: no-cache");
 require_once '../modelo/MySQL.php';
 session_start();
 
-if (!isset($_SESSION['cargo'])){
-  header("location: ./login.php");
-  exit();
+if (!isset($_SESSION['cargo'])) {
+    header("location: ./login.php");
+    exit();
 }
 
 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-$mysql = new MySQL();
-$mysql->conectar();
-header('Content-Type: application/json; charset=utf-8');
+    $mysql = new MySQL();
+    $mysql->conectar();
+    header('Content-Type: application/json; charset=utf-8');
     // validar campos obligatorios
-    $required = ['nombre','password','documento','cargo','area','fecha','salario','correo','telefono'];
+    $required = ['nombre', 'password', 'documento', 'cargo', 'area', 'fecha', 'salario', 'correo', 'telefono'];
     foreach ($required as $campo) {
         if (!isset($_POST[$campo]) || empty($_POST[$campo])) {
             http_response_code(400);
@@ -49,7 +49,7 @@ header('Content-Type: application/json; charset=utf-8');
     $ruta = 'assets/fotos/' . $nombreUnico;
     $rutaAbsoluta = __DIR__ . '/../' . $ruta;
 
-  
+
     $nombre    = htmlspecialchars(trim($_POST['nombre']), ENT_QUOTES, 'UTF-8');
     $password  = $_POST['password'];
     $documento = htmlspecialchars(trim($_POST['documento']), ENT_QUOTES, 'UTF-8');
@@ -63,39 +63,39 @@ header('Content-Type: application/json; charset=utf-8');
     $estado = "Activo";
     $hash   = password_hash($password, PASSWORD_BCRYPT);
 
-  
+
     if (!move_uploaded_file($_FILES['imagen']['tmp_name'], $rutaAbsoluta)) {
         http_response_code(500);
         echo json_encode(['success' => false, 'message' => 'Error al subir la imagen']);
         exit;
     }
- 
+
 
 
     // insertar en la base
     $consulta = "
         INSERT INTO empleados 
-        (foto, nombre, password, identificacion, cargo_id, departamento_id, fecha, salario, estado, correo, telefono) 
+        (imagen, nombre, password, numDocumento, cargo_id, departamento_id, fechaIngreso, salarioBase, estado, correoElectronico, telefono) 
         VALUES 
         ('$ruta', '$nombre', '$hash', '$documento', '$cargo', '$area', '$fecha', '$salario', '$estado', '$correo', '$telefono')
     ";
 
     // Validar que no exista el documento o correo
-$consultaDocumento = "
-    SELECT id
+    $consultaDocumento = "
+    SELECT IDempleado
     FROM empleados 
-    WHERE identificacion = '$documento' OR correo = '$correo'
+    WHERE numDocumento = '$documento' OR correoElectronico = '$correo'
 ";
 
-$result = $mysql->efectuarConsulta($consultaDocumento);
-if ($result && mysqli_num_rows($result) > 0) {
-    http_response_code(200);
-    echo json_encode([
-        'success' => false, 
-        'message' => 'El documento o correo ya está registrado.'
-    ]);
-    exit;
-}
+    $result = $mysql->efectuarConsulta($consultaDocumento);
+    if ($result && mysqli_num_rows($result) > 0) {
+        http_response_code(200);
+        echo json_encode([
+            'success' => false,
+            'message' => 'El documento o correo ya está registrado.'
+        ]);
+        exit;
+    }
 
 
 
@@ -106,5 +106,4 @@ if ($result && mysqli_num_rows($result) > 0) {
         http_response_code(400);
         echo json_encode(['success' => false, 'message' => 'Error al agregar el empleado.']);
     }
-
 }

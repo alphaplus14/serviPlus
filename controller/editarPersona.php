@@ -1,13 +1,13 @@
-<?php 
+<?php
 header("Content-Type: application/json; charset=utf-8");
 header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Pragma: no-cache");
 
 session_start();
 
-if (!isset($_SESSION['cargo'])){
-  echo json_encode(["success" => false, "message" => "Sesión no válida"]);
-  exit();
+if (!isset($_SESSION['cargo'])) {
+    echo json_encode(["success" => false, "message" => "Sesión no válida"]);
+    exit();
 }
 //conexion 
 require_once '../modelo/MySQL.php';
@@ -21,13 +21,15 @@ if ($id <= 0) {
 }
 
 // Traer foto actual para poder reemplazarla si se sube una nueva
-$sql = $mysql->efectuarConsulta("SELECT foto FROM empleados WHERE id='$id'");
+$sql = $mysql->efectuarConsulta("SELECT imagen FROM empleados WHERE IDempleado='$id'");
 
-if($sql->num_rows > 0){ $row = $sql->fetch_assoc(); $fotoActual= $row['foto'];
+if ($sql->num_rows > 0) {
+    $row = $sql->fetch_assoc();
+    $fotoActual = $row['foto'];
 }
 
 $nombre        = $_POST['nombre'];
-$passwordOld   = $_POST['passwordOld']; 
+$passwordOld   = $_POST['passwordOld'];
 $passwordNueva = $_POST['passwordNueva'];
 $cargo         = $_POST['cargo'];
 $area          = $_POST['area'];
@@ -54,14 +56,14 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
 }
 // Verificar duplicado de correo (excepto el mismo usuario)
 $consultaDuplicado = "
-    SELECT id FROM empleados 
-    WHERE correo = '$correo' AND id != '$id'
+    SELECT IDempleado FROM empleados 
+    WHERE correoElectronico = '$correo' AND IDempleado != '$id'
 ";
 $resultDup = $mysql->efectuarConsulta($consultaDuplicado);
 if ($resultDup && mysqli_num_rows($resultDup) > 0) {
-     http_response_code(200);
+    http_response_code(200);
     echo json_encode([
-        'success' => false, 
+        'success' => false,
         'message' => 'El documento o correo ya está registrado.'
     ]);
     exit();
@@ -75,32 +77,32 @@ if (!empty($passwordNueva)) {
         exit();
     }
 
-//si coincide actuliza por la nueva
+    //si coincide actuliza por la nueva
     $passwordNuevaHash = password_hash($passwordNueva, PASSWORD_BCRYPT);
     $consulta = "UPDATE empleados 
-        SET foto='$fotoActual', 
+        SET imagen='$fotoActual', 
             nombre='$nombre',
             password='$passwordNuevaHash',
             cargo_id='$cargo', 
             departamento_id='$area', 
-            fecha='$fecha_ingreso',
-            salario='$salario', 
-            correo='$correo', 
+            fechaIngreso='$fecha_ingreso',
+            salarioBase='$salario', 
+            correoElectronico='$correo', 
             telefono='$telefono'
-        WHERE id='$id'";
+        WHERE IDempleado='$id'";
 } else {
     //si no actualiza queda la misma
 
     $consulta = "UPDATE empleados 
-        SET foto='$fotoActual', 
+        SET imagen='$fotoActual', 
             nombre='$nombre',
             cargo_id='$cargo', 
             departamento_id='$area', 
-            fecha='$fecha_ingreso',
-            salario='$salario', 
-            correo='$correo', 
+            fechaIngreso='$fecha_ingreso',
+            salarioBase='$salario', 
+            correoElectronico='$correo', 
             telefono='$telefono'
-        WHERE id='$id'";
+        WHERE IDempleado='$id'";
 }
 
 $result = $mysql->efectuarConsulta($consulta);

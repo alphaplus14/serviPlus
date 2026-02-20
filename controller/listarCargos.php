@@ -7,7 +7,7 @@ $mysql = new MySQL();
 $mysql->conectar();
 
 // Consulta para obtener todos los cargos
-$query = "SELECT id, nombre FROM cargo ORDER BY nombre ASC";
+$query = "SELECT IDcargo, nombreCargo FROM cargos ORDER BY nombreCargo ASC";
 $resultado = $mysql->efectuarConsulta($query);
 
 $cargos = [];
